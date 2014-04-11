@@ -1,4 +1,4 @@
-part of domain.model;
+part of move_me.domain;
 
 class Field {
   static const int emptyValue = -1;

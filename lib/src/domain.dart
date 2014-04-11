@@ -1,7 +1,6 @@
-library domain.model;
+library move_me.domain;
 
 import 'dart:math';
-import 'dart:collection';
 
 part 'domain/position.dart';
 part 'domain/field.dart';

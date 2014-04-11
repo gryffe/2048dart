@@ -1,0 +1,1 @@
+[KeyCode.UP ,KeyCode.DOWN,KeyCode.LEFT,KeyCode.RIGHT]

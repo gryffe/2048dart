@@ -1,4 +1,4 @@
-library test_move_me;
+library test_domain;
 
 //import 'dart:async' as async;
 import 'package:unittest/unittest.dart';
@@ -6,6 +6,12 @@ import 'package:mock/mock.dart';
 import '../../lib/src/domain.dart';
 
 part 'mocks.dart';
+
+class WithFactory{
+  factory WithFactory(){
+    
+  }
+}
 
 void main(){
   group('position',(){
@@ -60,5 +66,32 @@ void main(){
       expect(pos, new Position(3,3));
     });
   });
-
+  
+  group('board, static',(){
+    test('removeFirstDuplicateElement with one element',(){
+      var items = [1];
+      var result =Board.doubleFirstDuplicateElement(items);
+      expect(result,items);
+    });  
+    test('removeFirstDuplicateElement with no duplicates',(){
+      var items = [1,2,3,4];
+      var result =Board.doubleFirstDuplicateElement(items);
+      expect(result,items);
+    });  
+    test('removeFirstDuplicateElement with one duplicate, last',(){
+      var items = [1,2,3,3];
+      var result =Board.doubleFirstDuplicateElement(items);
+      expect(result,[1,2,6]);
+    });  
+    test('removeFirstDuplicateElement with one duplicate, first',(){
+      var items = [1,1,3,4];
+      var result =Board.doubleFirstDuplicateElement(items);
+      expect(result,[2,3,4]);
+    });  
+    test('removeFirstDuplicateElement with two duplicates',(){
+      var items = [2,2,2,2];
+      var result =Board.doubleFirstDuplicateElement(items);
+      expect(result,[4,2,2]);
+    });  
+  });
 }

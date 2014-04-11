@@ -1,7 +1,7 @@
 name: move_me
 description: A sample web application
 dependencies:
-  bot: any
-  bot_web: any
   browser: any
+  logging: any
+dev_dependencies:
   unittest: any
