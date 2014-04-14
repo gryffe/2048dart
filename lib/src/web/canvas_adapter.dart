@@ -2,9 +2,6 @@ part of move_me.web;
 
 class CanvasAdapter{
   final Logger log = new Logger('CanvasAdapter');
-  final String green = '#669966';
-  final String blue = '#2BB8FF';
-  final String orange = '#FFC02B';
   final int margin = 2;
   final int widthAndHeight = 4;
   int widthAndHeightPx;
@@ -55,8 +52,8 @@ class CanvasAdapter{
   _draw(int left, int top, Field field) {
     ctx.fillStyle = field.color;
     ctx.fillRect(left + margin, top + margin, fieldPx-2*margin, fieldPx-2*margin);
-    ctx.fillStyle = blue;
     
+    ctx.fillStyle = field.textColor;
     var text = "${field.value}";
     TextMetrics v = ctx.measureText(text);
     
@@ -77,19 +74,6 @@ class CanvasAdapter{
     fieldPx = (widthAndHeightPx / widthAndHeight).round();
   }
 
-  void _fillRect(int left, int top){
-    ctx.fillStyle= orange;
-    ctx.fillRect(left + margin, top + margin, fieldPx-2*margin, fieldPx-2*margin);
-    ctx.fillStyle = blue;
-    
-    var text = "($left,$top)";
-    TextMetrics v = ctx.measureText(text);
-    
-    var x = left + margin + fieldPx/2 - v.width/2;
-    var y = top + margin + fieldPx/2;     
-    
-    ctx.fillText(text, x, y);
-  }
   
   void clear(){
     ctx.clearRect(leftOfBoard - margin, topOfBoard - margin, widthAndHeightPx + 2*margin , widthAndHeightPx + 2*margin);
@@ -99,7 +83,7 @@ class CanvasAdapter{
   void setupBoard(){
     ctx.rect(leftOfBoard - margin, topOfBoard - margin, widthAndHeightPx + 2*margin , widthAndHeightPx + 2*margin);
     ctx.lineWidth = 1;
-    ctx.strokeStyle = green;
+    ctx.strokeStyle = '#000000';
     ctx.stroke();
   }
   
