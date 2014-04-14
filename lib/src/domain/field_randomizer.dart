@@ -10,11 +10,15 @@ class FieldRandomizer {
     _randomValue = new Random();
   }
 
+  void setRandomFieldValue(Field field){
+    var value = _randomValue.nextInt(16);
+    field.value = value > 12 ? 4 : 2;
+  }
+  
   Field selectRandomFieldFrom(Iterable<Field> fields) {
     var idx = _randomField.nextInt(fields.length);
     var field = fields.elementAt(idx);
-    var value = _randomValue.nextInt(16);
-    field.value = value > 12 ? 4 : 2;
+    setRandomFieldValue(field);
     return field;
   }
 }

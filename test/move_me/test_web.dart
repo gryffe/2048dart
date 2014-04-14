@@ -7,15 +7,16 @@ import 'package:mock/mock.dart';
 
 import 'package:move_me/src/web.dart';
 
-class CanvasElementMock extends Mock implements CanvasElement{}
+part 'web/mocks.dart';
+
 
 void main(){
   final Logger log = new Logger('test_web');
   
   group('board',(){
     test('create',(){
-      var board = new CanvasAdapter(new CanvasElementMock());  
-      expect(board, isNotNull);
+      var canvas = new CanvasAdapter(new CanvasElementMock());  
+      expect(canvas, isNotNull);
     });
   });
 }

@@ -7,10 +7,10 @@ class Ui{
     debug.text ="";
     Logger.root.onRecord.listen((LogRecord rec) {
       var text = '${rec.level.name}: ${rec.time}: ${rec.message}'; 
-      //print(text);
-      text = HTML_ESCAPE.convert(text) + "<br/>" + debug.innerHtml;
+      print(text);
+      //text = HTML_ESCAPE.convert(text) + "<br/>" + debug.innerHtml;
       //debug.appendHtml(HTML_ESCAPE.convert(text) + "<br/>");
-      debug.innerHtml = text;
+      //debug.innerHtml = text;
     });
   }
   
