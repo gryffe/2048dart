@@ -2,6 +2,10 @@ part of move_me.domain;
 
 
 class GameEvent {
+  int get score{
+    return Util.getSelected(rows).map((field)=>field.value).reduce((value, nextValue)=>value+nextValue);
+  }
+  
   Iterable<Iterable<Field>> rows;
 }
 

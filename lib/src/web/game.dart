@@ -5,11 +5,9 @@ typedef void _Action();
 
 class Game {
   void startEventLoop() {
-
   }
 
   void stopEventLoop() {
-
   }
 
   void raiseGameEvent(GameEvent evt) {

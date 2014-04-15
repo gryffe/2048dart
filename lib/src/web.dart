@@ -8,6 +8,5 @@ import 'dart:async';
 
 part 'web/game.dart';
 part 'web/keyboard.dart';
-part 'web/ui.dart';
 part 'web/canvas_adapter.dart';
 

@@ -16,6 +16,9 @@ class Keyboard {
       _keys.remove(e.keyCode);
     });
     
+    _window.onFocus.listen((onData){
+      _keys.clear();
+    });    
   }
   
   factory Keyboard.withWindow(Window aWindow){

@@ -22,17 +22,18 @@ void main(){
     });
     
     test('valueToColor',(){
+      var lastIndex = Colors.wellKnownColorCodesExceptWhiteAndBlack.length -1;
       var canvas = new CanvasAdapter(new CanvasElementMock());  
       var field = new Field(new Position(0,0));
       field.value = pow(2,1);
       var colorCode = canvas.valueToColor(field);
-      expect(colorCode,CanvasAdapter.colorCodes[0]);
-      field.value = pow(2,canvas.lastIndex +1);
+      expect(colorCode,Colors.colorByIndex(0));
+      field.value = pow(2,lastIndex +1);
       colorCode = canvas.valueToColor(field);
-      expect(colorCode,CanvasAdapter.colorCodes[canvas.lastIndex]);
-      field.value = pow(2,canvas.lastIndex +2);
+      expect(colorCode,Colors.colorByIndex(lastIndex));
+      field.value = pow(2,lastIndex +2);
       colorCode = canvas.valueToColor(field);
-      expect(colorCode,CanvasAdapter.colorCodes[0]);
+      expect(colorCode,Colors.colorByIndex(0));
     });
     
   });

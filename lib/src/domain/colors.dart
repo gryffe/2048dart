@@ -3,6 +3,14 @@ part of move_me.domain;
 
 class Colors {
   
+  static String colorByIndex(int index){
+    var lastIndex = wellKnownColorCodesExceptWhiteAndBlack.length -1;
+    if(index > lastIndex){
+      index -= lastIndex + 1;
+    }
+    return wellKnownColorCodesExceptWhiteAndBlack[index];
+  }
+  
   static List<String> get wellKnownColorCodesExceptWhiteAndBlack{
     return wellKnownColorNamesExceptWhiteAndBlack.map((name)=>colorMap[name]).toList();
   }
