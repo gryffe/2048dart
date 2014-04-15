@@ -67,6 +67,11 @@ class Game {
   }
 
   void move(int keyCode) {
+    if(_keyboard.isPressed(KeyCode.CTRL)&&keyCode==KeyCode.Z){
+      undo();
+      return;
+    }
+
     if (isAnyControlOrAltOrShiftKeyPressed()) {
       return;
     }
@@ -102,6 +107,14 @@ class Game {
   
   void start(){
     _board.occupyTwoRandomFields();
+    raiseGameEvent(_board.createGameEvent());
   }
   
+  void undo(){
+    log.info("undo");
+    _board.undo();
+    var evt = new GameEvent();
+    evt.rows = _board.rows.toList();
+    raiseGameEvent(_board.createGameEvent());
+  }
 }

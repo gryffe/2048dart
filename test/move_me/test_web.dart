@@ -6,6 +6,8 @@ import 'package:unittest/unittest.dart';
 import 'package:mock/mock.dart';
 
 import 'package:move_me/src/web.dart';
+import 'package:move_me/src/domain.dart';
+import 'dart:math';
 
 part 'web/mocks.dart';
 
@@ -13,10 +15,25 @@ part 'web/mocks.dart';
 void main(){
   final Logger log = new Logger('test_web');
   
-  group('board',(){
+  group('canvas_adapter',(){
     test('create',(){
       var canvas = new CanvasAdapter(new CanvasElementMock());  
       expect(canvas, isNotNull);
     });
+    
+    test('valueToColor',(){
+      var canvas = new CanvasAdapter(new CanvasElementMock());  
+      var field = new Field(new Position(0,0));
+      field.value = pow(2,1);
+      var colorCode = canvas.valueToColor(field);
+      expect(colorCode,CanvasAdapter.colorCodes[0]);
+      field.value = pow(2,canvas.lastIndex +1);
+      colorCode = canvas.valueToColor(field);
+      expect(colorCode,CanvasAdapter.colorCodes[canvas.lastIndex]);
+      field.value = pow(2,canvas.lastIndex +2);
+      colorCode = canvas.valueToColor(field);
+      expect(colorCode,CanvasAdapter.colorCodes[0]);
+    });
+    
   });
 }

@@ -1,11 +1,14 @@
-library test_domain;
+library domain_tests;
 
 //import 'dart:async' as async;
+import 'dart:math';
 import 'package:unittest/unittest.dart';
 import 'package:mock/mock.dart';
-import '../../lib/src/domain.dart';
+import 'package:move_me/src/domain.dart';
 
 part 'domain/mocks.dart';
+part 'domain/color_tests.dart';
+
 
 class StrictRandomMock implements FieldRandomizer{
   
@@ -25,6 +28,23 @@ class StrictRandomMock implements FieldRandomizer{
 
 
 void main(){
+  
+  group('math',(){
+    test('log',(){
+      var mathLog = log(16)*LOG2E;
+      var twoToThePowerOf = 2;
+      expect(mathLog,4);
+      
+      for(int i = 2; i < 10; i++){
+        var calc = pow(2,i);
+        var actual = log(calc)*LOG2E;
+        expect(actual.round(),i);
+      }
+      
+      
+    });
+  });  
+  
   group('position',(){
     test('create',(){
       var e = new Position(0,0);
@@ -60,6 +80,15 @@ void main(){
     test('throws',() {
       expect(()=> new Field(null),throws);
     });
+    
+    test('expValue',() {
+      var field = new Field(new Position(0,0));
+      field.value = pow(2,1);
+      expect(field.expValue,1);
+      field.value = pow(2,15);
+      expect(field.expValue,15);
+    });
+    
   });
 
   var randomMock = new FieldRandomizerMock();
@@ -207,5 +236,6 @@ String expected =
     });  
   });
   
+  colorTests();
   
 }

@@ -20,6 +20,7 @@ class Board {
   }
   
   factory Board._withDefaultParameters(FieldRandomizer fieldrandomizer, FieldValueUpdater fieldvalueupdater, [size = 4]) {
+    assert(fieldrandomizer != null);
     var board = new Board._create(fieldrandomizer, size);
     board._fieldvalueupdater = fieldvalueupdater;
     return board;
@@ -28,7 +29,6 @@ class Board {
   Iterable<Field> get fields=> _fields;
   
   Board._create(this._randomizer, [this._size = 4]) {
-    assert(_randomizer != null);
     _fields = new List<Field>();
     _snapshot = new List<Field>();
     _positionToIndex = new Map<Position, int>();
@@ -56,6 +56,11 @@ class Board {
     }
   }
 
+  void undo(){
+    _fields.clear();
+    _fields.addAll(_snapshot);
+  }
+  
   String toString(){
     var lines = rows.map((Iterable<Field> row){
       var line = row.join("||");
@@ -78,6 +83,13 @@ class Board {
 
   Iterable<Field> get freeFields => _fields.where((field) => !field.isSelected);
 
+
+  GameEvent createGameEvent(){
+    var gameEvent = new GameEvent();
+    gameEvent.rows = rows;
+    return gameEvent;
+  }
+  
   GameEvent _move(Iterable<Iterable<Field>> rowsOrColumns) {
     var items = rowsOrColumns.toList();
     takeSnapshot();
@@ -85,9 +97,7 @@ class Board {
     if (isChanged(_snapshot, _fields)) {
       _selectRandomField(freeFields);
     }
-    var gameEvent = new GameEvent();
-    gameEvent.rows = rows;
-    return gameEvent;
+    return createGameEvent();
   }
 
   void clear(){
@@ -103,7 +113,6 @@ class Board {
     fields.forEach((field) {
       field.value = e.moveNext() ? e.current : Field.emptyValue;
     });
-
   }
 
   GameEvent moveLeft() {

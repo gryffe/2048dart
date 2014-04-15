@@ -1,7 +1,7 @@
 library move_me.web;
 
 import 'dart:html';
-import 'dart:convert';
+
 import 'package:logging/logging.dart';
 import 'package:move_me/src/domain.dart';
 import 'dart:async';
