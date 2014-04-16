@@ -1,0 +1,5 @@
+    var lines = rows.map((Iterable<Field> row){
+      var line = row.join("||");
+      return line;
+    });
+    return lines.toList().reversed.join('\n');

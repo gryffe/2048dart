@@ -25,21 +25,19 @@ class Field {
     return other.position == position && other.value == value;
   }
   
-  
   String toString(){
     return '${position.toString()}: $value';
   }
-  
   
   void clear() {
     value = emptyValue;
   }
   
-  int get expValue {
+  int get assignmentCount {
     if(isSelected){
       return (log(value)*LOG2E).round();  
     }
-    return emptyValue;
+    return 0;
   }
 }
 

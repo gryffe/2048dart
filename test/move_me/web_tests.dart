@@ -1,7 +1,6 @@
-library test_web;
+library web_tests;
 
 import 'dart:html';
-import 'package:logging/logging.dart';
 import 'package:unittest/unittest.dart';
 import 'package:mock/mock.dart';
 
@@ -12,15 +11,13 @@ import 'dart:math';
 part 'web/mocks.dart';
 
 
-void main(){
-  final Logger log = new Logger('test_web');
-  
+void runTests(){
   group('canvas_adapter',(){
     test('create',(){
       var canvas = new CanvasAdapter(new CanvasElementMock());  
       expect(canvas, isNotNull);
     });
-    
+        
     test('valueToColor',(){
       var lastIndex = Colors.wellKnownColorCodesExceptWhiteAndBlack.length -1;
       var canvas = new CanvasAdapter(new CanvasElementMock());  
@@ -37,4 +34,10 @@ void main(){
     });
     
   });
+  
+}
+
+void main(){
+  runTests();  
+  window.close();
 }

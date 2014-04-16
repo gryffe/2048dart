@@ -1,28 +1,17 @@
 part of move_me.domain;
 
-
-class GameEvent {
-  int get score{
-    return Util.getSelected(rows).map((field)=>field.value).reduce((value, nextValue)=>value+nextValue);
-  }
-  
-  Iterable<Iterable<Field>> rows;
-}
-
 class Board {
   List<Field> _fields;
   List<Field> _snapshot;
-  Map<Position, int> _positionToIndex;
   int _size;
-  int get size => _size;
   FieldRandomizer _randomizer;
   FieldValueUpdater _fieldvalueupdater;
-
-  factory Board.withRandomizer(FieldRandomizer fieldrandomizer, [size = 4]){
-    var fieldvalueupdater = new FieldValueUpdater();
-    return new Board._withDefaultParameters(fieldrandomizer, fieldvalueupdater,size);
-  }
   
+  factory Board.withRandomizer(FieldRandomizer fieldrandomizer, [size = 4]) {
+    var fieldvalueupdater = new FieldValueUpdater();
+    return new Board._withDefaultParameters(fieldrandomizer, fieldvalueupdater, size);
+  }
+
   factory Board._withDefaultParameters(FieldRandomizer fieldrandomizer, FieldValueUpdater fieldvalueupdater, [size = 4]) {
     assert(fieldrandomizer != null);
     var board = new Board._create(fieldrandomizer, size);
@@ -30,12 +19,10 @@ class Board {
     return board;
   }
 
-  Iterable<Field> get fields=> _fields;
-  
+
   Board._create(this._randomizer, [this._size = 4]) {
     _fields = new List<Field>();
     _snapshot = new List<Field>();
-    _positionToIndex = new Map<Position, int>();
     _resolvePositions();
     takeSnapshot();
   }
@@ -51,34 +38,26 @@ class Board {
   }
 
   _resolvePositions() {
-    for (var y = 0; y < size; y++) {
-      for (var x = 0; x < size; x++) {
+    for (var y = 0; y < _size; y++) {
+      for (var x = 0; x < _size; x++) {
         var position = new Position(x, y);
-        _positionToIndex[position] = _fields.length;
         _fields.add(new Field(position));
       }
     }
   }
 
-  void undo(){
+  void undo() {
     _fields.clear();
     _fields.addAll(_snapshot);
   }
-  
-  String toString(){
-    var lines = rows.map((Iterable<Field> row){
-      var line = row.join("||");
-      return line;
-    });
+
+  String toString() {
+    var lines = rows.map((Iterable<Field> row) => row.join("||"));
     return lines.toList().reversed.join('\n');
   }
-  
-  Iterable<Iterable<Field>> _getFields(bool isSearchedField(Field element, int index)) {
-    List<Iterable<Field>> result = new List<Iterable<Field>>();
-    for (int i = 0; i < _size; i++) {
-      result.add(_fields.where((field) => isSearchedField(field, i)));
-    }
-    return result;
+
+  Iterable<Iterable<Field>> _getFields(bool columnOrRowPredicate(Field element, int index)) {
+    return new Iterable.generate(_size).map((idx) => _fields.where((field) => columnOrRowPredicate(field, idx)));
   }
 
   Iterable<Iterable<Field>> get columns => _getFields((field, column) => field.column == column);
@@ -87,55 +66,52 @@ class Board {
 
   Iterable<Field> get freeFields => _fields.where((field) => !field.isSelected);
 
+  Iterable<Field> get selectedFields => _fields.where((field) => field.isSelected);
 
-  GameEvent createGameEvent(){
-    var gameEvent = new GameEvent();
-    gameEvent.rows = rows;
-    return gameEvent;
-  }
-  
-  GameEvent _move(Iterable<Iterable<Field>> rowsOrColumns) {
-    var items = rowsOrColumns.toList();
+  Iterable<Field> get fields => _fields;
+
+  void _move(Iterable<Iterable<Field>> rowsOrColumns) {
     takeSnapshot();
-    rowsOrColumns.forEach((rowOrColumn) => setNewValues(rowOrColumn));
-    if (isChanged(_snapshot, _fields)) {
-      _selectRandomField(freeFields);
+    rowsOrColumns.forEach((rowOrColumn) => moveFieldValues(rowOrColumn));
+    if (_isFieldsChanged) {
+      _selectOneRandomField(freeFields);
     }
-    return createGameEvent();
   }
 
-  void clear(){
-    _fields.forEach((Field field)=>field.clear());
-  }
+  bool get _isFieldsChanged => isChanged(_snapshot, _fields); 
   
-  setNewValues(Iterable<Field> fields) {
-    var values = fields.where((field) => field.isSelected).map((field) => field.value).toList();
-    if (values.length == 0) {
+  void clear() {
+    _fields.forEach((Field field) => field.clear());
+  }
+
+  static void moveFieldValues(Iterable<Field> rowOrColumn) {
+    var values = rowOrColumn.where((field) => field.isSelected).map((field) => field.value);
+    if (values.isEmpty) {
       return;
     }
-    var e = doubleFirstDuplicateElement(values).iterator;
-    fields.forEach((field) {
+    var e = squareFirstDuplicate(values).iterator;
+    rowOrColumn.forEach((field) {
       field.value = e.moveNext() ? e.current : Field.emptyValue;
     });
   }
 
-  GameEvent moveLeft() {
-    return _move(rows);
+  void moveLeft() {
+    _move(rows);
   }
 
-  GameEvent moveRight() {
-    return _move(rows.map((row) => row.toList().reversed));
+  void moveRight() {
+    _move(rows.map((row) => row.toList().reversed));
   }
 
-  GameEvent moveUp() {
-    return _move(columns);
+  void moveUp() {
+    _move(columns);
   }
 
-  GameEvent moveDown() {
-    return _move(columns.map((column) => column.toList().reversed));
+  void moveDown() {
+    _move(columns.map((column) => column.toList().reversed));
   }
 
-  static Iterable<int> doubleFirstDuplicateElement(Iterable<int> values) {
+  static Iterable<int> squareFirstDuplicate(Iterable<int> values) {
     assert(values.length >= 1);
     var result = new List<int>();
     result.add(values.first);
@@ -153,23 +129,22 @@ class Board {
     return result;
   }
 
-  void occupyTwoRandomFields()
-   {
-       var first = _getSelectedRandomField(_fields);
-       var res = new List<Field>();
-       //_fields.
-       var restOfFields = _fields.where((Field test){
-         bool areEqual = test.areEqual(first);
-         return !areEqual;
-       }).toList();
-          
-       _selectRandomField(restOfFields);
-   }
-  
-  void _selectRandomField(Iterable<Field> fields) {
+  void occupyTwoRandomFields() {
+    var first = _getSelectedRandomField(_fields);
+    var res = new List<Field>();
+    //_fields.
+    var restOfFields = _fields.where((Field test) {
+      bool areEqual = test.areEqual(first);
+      return !areEqual;
+    }).toList();
+
+    _selectOneRandomField(restOfFields);
+  }
+
+  void _selectOneRandomField(Iterable<Field> fields) {
     _getSelectedRandomField(fields);
   }
-  
+
   Field _getSelectedRandomField(Iterable<Field> fields) {
     return _randomizer.selectRandomFieldFrom(fields);
   }

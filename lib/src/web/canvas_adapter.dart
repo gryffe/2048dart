@@ -14,6 +14,7 @@ class CanvasAdapter {
   CanvasRenderingContext2D _ctx;
   
   factory CanvasAdapter(CanvasElement canvas) {
+    //var width = canvas.width;
     var ctx = canvas.context2D;
     var canvasAdapter = new CanvasAdapter._internal(ctx);
     return canvasAdapter;
@@ -21,15 +22,14 @@ class CanvasAdapter {
 
   String valueToColor(Field field){
     if(field.isSelected){
-      var index = field.expValue-1;
+      var index = field.assignmentCount-1;
       return Colors.colorByIndex(index);
     }
     throw new StateError('field.isSelected');  
   }
   
-  void update(Iterable<Iterable<Field>> rows) {
+  void update(Iterable<Field> fields){
     clear();
-    var fields = Util.getSelected(rows);
     fields.forEach((field)=>draw(field));
     _ctx.fillStyle = black;
     fields.forEach((field)=>drawText(field));

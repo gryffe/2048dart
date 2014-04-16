@@ -2,11 +2,6 @@ import 'dart:html';
 import 'package:logging/logging.dart';
 import 'package:move_me/move_me.dart';
 
-void registerGameKeys(Game game){
-  window.onKeyUp.listen((KeyboardEvent e) {
-    game.move(e.keyCode);
-  });
-}
 
 void setUpLogging(){
   Logger.root.level = Level.ALL;
@@ -26,12 +21,17 @@ void preventScrollbarsFromScrolling(){
 
 
 void main() {
+
   setUpLogging();
-  
-  //final Logger log = new Logger('move_me.dart');
   preventScrollbarsFromScrolling();
 
   Game game = new Game();
+
+  void registerGameKeys(Game game){
+    window.onKeyUp.listen((KeyboardEvent e) {
+      game.move(e.keyCode);
+    });
+  }
   registerGameKeys(game);
 
   CanvasElement canvasElement = querySelector("#board") as CanvasElement;
@@ -39,9 +39,10 @@ void main() {
   canvasAdapter.setupBoard();
   
   game.onGameStateChanged.listen((GameEvent evt){
-    canvasAdapter.update(evt.rows);
+    canvasAdapter.update(evt.selectedFields);
     var div =querySelector('#score') as DivElement;
     div.text = 'Score: ${evt.score}';
   });
   game.start();
+  
 }

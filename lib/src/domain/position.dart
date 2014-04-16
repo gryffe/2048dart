@@ -20,7 +20,11 @@ class Position {
     return "($x,$y)";
   }
 
-  Position(this._x, this._y);
+  Position(this._x, this._y){
+    if(this._x==null||this._y==null){
+      throw new ArgumentError("this._x==null||this._y==null");
+    }
+  }
 }
 
 

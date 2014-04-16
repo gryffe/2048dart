@@ -1,7 +1,13 @@
 part of move_me.web;
 
-typedef void _Action();
+class GameEvent {
+  int get score{
+    return selectedFields.map((field)=>field.value).reduce((value, nextValue)=>value+nextValue);
+  }
+  Iterable<Field> selectedFields;
+}
 
+typedef void _Action();
 
 class Game {
   void startEventLoop() {
@@ -10,6 +16,7 @@ class Game {
   void stopEventLoop() {
   }
 
+  
   void raiseGameEvent(GameEvent evt) {
     if (_controller == null){
       return;
@@ -52,6 +59,7 @@ class Game {
 
   Stream<GameEvent> get onGameStateChanged => _getEventStream();
 
+  
 
   bool isAnyControlOrAltOrShiftKeyPressed() {
     bool isPressed = false;
@@ -65,7 +73,8 @@ class Game {
   }
 
   void move(int keyCode) {
-    if(_keyboard.isPressed(KeyCode.CTRL)&&keyCode==KeyCode.Z){
+    bool isCtrlZPressed = _keyboard.isPressed(KeyCode.CTRL)&&keyCode==KeyCode.Z;
+    if(isCtrlZPressed){
       undo();
       return;
     }
@@ -81,38 +90,44 @@ class Game {
 
   void moveUp() {
     log.info("moveUp");
-    var gameEvent =_board.moveUp();
-    raiseGameEvent(gameEvent);
+    _board.moveUp();
+    notify();
   }
 
   void moveDown() {
     log.info("moveDown");
-    var gameEvent =_board.moveDown();
-    raiseGameEvent(gameEvent);
+    _board.moveDown();
+    notify();
   }
 
   void moveLeft() {
     log.info("moveLeft");
-    var gameEvent =_board.moveLeft();
-    raiseGameEvent(gameEvent);
+    _board.moveLeft();
+    notify();
   }
 
   void moveRight() {
     log.info("moveRight");
-    var gameEvent =_board.moveRight();
-    raiseGameEvent(gameEvent);
+    _board.moveRight();
+    notify();
   }
   
   void start(){
+    log.info("board - random fields selected");
     _board.occupyTwoRandomFields();
-    raiseGameEvent(_board.createGameEvent());
+    notify();
   }
   
   void undo(){
     log.info("undo");
     _board.undo();
-    var evt = new GameEvent();
-    evt.rows = _board.rows.toList();
-    raiseGameEvent(_board.createGameEvent());
+    notify();    
   }
+  
+  void notify(){
+    var gameEvent = new GameEvent();
+    gameEvent.selectedFields = _board.selectedFields;
+    raiseGameEvent(gameEvent);
+  }
+  
 }

@@ -14,21 +14,5 @@ class Debug{
     });
     log.info('Selected count $countSelected');
   }
-  
-
 }
 
-class Util{
-  static Iterable<Field> getSelected(Iterable<Iterable<Field>> rows){
-    var fields = new List<Field>();
-    rows.forEach((Iterable<Field> row) {
-      row.forEach((Field field) {
-        if(field.isSelected){
-          fields.add(field);  
-        }
-      });
-    });
-    return fields;    
-  }
-  
-}
