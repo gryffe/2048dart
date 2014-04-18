@@ -12,6 +12,7 @@ part 'web/mocks.dart';
 
 
 void runTests(){
+    
   group('canvas_adapter',(){
     test('create',(){
       var canvas = new CanvasAdapter(new CanvasElementMock());  
@@ -38,6 +39,6 @@ void runTests(){
 }
 
 void main(){
-  runTests();  
+  runTests();
   window.close();
 }

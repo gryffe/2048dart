@@ -22,4 +22,22 @@ void main(){
   field_tests();
   board_tests();  
   colorTests();
+  utilsTests();
+}
+
+void utilsTests() {
+  test('except',(){
+    var fields = [1,2,3,4].map((value){
+      var field = new Field(new Position(value,0));
+      field.value = value;
+      return field;
+    });  
+
+    var tests = {fields.first : [2,3,4],fields.last:[1,2,3],fields.elementAt(1):[1,3,4]};
+    tests.forEach((field, expected){
+      var except = Utils.except(fields, field);
+      expect(except.map((field)=>field.value),expected);
+    });
+    
+  });
 }

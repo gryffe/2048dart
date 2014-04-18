@@ -5,20 +5,11 @@ class Board {
   List<Field> _snapshot;
   int _size;
   FieldRandomizer _randomizer;
-  FieldValueUpdater _fieldvalueupdater;
   
   factory Board.withRandomizer(FieldRandomizer fieldrandomizer, [size = 4]) {
-    var fieldvalueupdater = new FieldValueUpdater();
-    return new Board._withDefaultParameters(fieldrandomizer, fieldvalueupdater, size);
-  }
-
-  factory Board._withDefaultParameters(FieldRandomizer fieldrandomizer, FieldValueUpdater fieldvalueupdater, [size = 4]) {
-    assert(fieldrandomizer != null);
     var board = new Board._create(fieldrandomizer, size);
-    board._fieldvalueupdater = fieldvalueupdater;
     return board;
   }
-
 
   Board._create(this._randomizer, [this._size = 4]) {
     _fields = new List<Field>();
@@ -129,15 +120,11 @@ class Board {
     return result;
   }
 
+  
+  
   void occupyTwoRandomFields() {
-    var first = _getSelectedRandomField(_fields);
-    var res = new List<Field>();
-    //_fields.
-    var restOfFields = _fields.where((Field test) {
-      bool areEqual = test.areEqual(first);
-      return !areEqual;
-    }).toList();
-
+    var field = _getSelectedRandomField(_fields);
+    var restOfFields = Utils.except(_fields,field);
     _selectOneRandomField(restOfFields);
   }
 
@@ -161,34 +148,3 @@ class Board {
 
 }
 
-class FieldValueUpdater {
-  void setNewFieldValues(Iterable<Field> fields) {
-    var values = fields.where((field) => field.value > Field.emptyValue).map((field) => field.value);
-    if (values.length == 0) {
-      return;
-    }
-    var e = doubleFirstDuplicateElement(values).iterator;
-    fields.forEach((field) {
-      field.value = e.moveNext() ? e.current : 0;
-    });
-  }
-
-  static Iterable<int> doubleFirstDuplicateElement(Iterable<int> values) {
-    assert(values.length >= 1);
-    var result = new List<int>();
-    result.add(values.first);
-    var e = values.skip(1).iterator;
-    while (e.moveNext()) {
-      if (e.current == result.last) {
-        result[result.length - 1] = 2 * e.current;
-        break;
-      }
-      result.add(e.current);
-    }
-    while (e.moveNext()) {
-      result.add(e.current);
-    }
-    return result;
-  }
-
-}

@@ -1,6 +1,9 @@
 part of move_me.web;
 
 class CanvasAdapter {
+  static const String font = "20pt Calibri";
+  static const String black = '#000000';
+
   final Logger log = new Logger('CanvasAdapter');
   final int margin = 2;
   final int widthAndHeight = 4;
@@ -9,7 +12,6 @@ class CanvasAdapter {
   int fieldWidthAndHeightPx;
   final int leftOfBoard = 10;
   final int topOfBoard = 10;
-  final String black = '#000000';
 
   CanvasRenderingContext2D _ctx;
   
@@ -62,7 +64,7 @@ class CanvasAdapter {
 
   void clear() {
     _ctx.clearRect(leftOfBoard - margin, topOfBoard - margin, widthAndHeightPx + 2 * margin, widthAndHeightPx + 2 * margin);
-    _ctx.font = "20pt Calibri";
+    _ctx.font = font;
   }
 
   void setupBoard() {
